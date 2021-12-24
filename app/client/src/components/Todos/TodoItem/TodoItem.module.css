@@ -1,15 +1,19 @@
 .todo {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   margin: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #ccc;
 }
 
-.todo h3 {
+.todo p {
   margin: 0 0 0.25rem 0;
 }
 
-.description {
-  font-style: italic;
+.checkbox {
+  height: 15px;
+  width: 15px;
+  border: 1px solid #7182FF;
+  margin-right: 10px;
 }
+

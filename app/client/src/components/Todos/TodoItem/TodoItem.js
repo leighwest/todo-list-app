@@ -6,7 +6,8 @@ const TodoItem = props => {
 
   return (
     <li className={classes.todo}>
-      <h3 className={classes.description}>{props.description}</h3>
+      <span className={classes.checkbox}/>
+      <p className={classes.description}>{props.description}</p>
     </li>
   );
 };

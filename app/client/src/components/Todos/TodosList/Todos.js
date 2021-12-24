@@ -1,5 +1,5 @@
-import Card from '../UI/Card'
-import TodoItem from './TodoItem/TodoItem';
+import Card from '../../UI/Card'
+import TodoItem from '../TodoItem/TodoItem';
 
 import classes from './Todos.module.css'
 
