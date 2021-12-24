@@ -1,0 +1,24 @@
+.todos {
+  max-width: 60rem;
+  width: 90%;
+  padding:150px 180px;
+  animation: todos-appear 1s ease-out forwards;
+}
+
+.todos ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@keyframes todos-appear {
+  from {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
