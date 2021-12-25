@@ -1,7 +1,7 @@
 .todos {
-  max-width: 60rem;
+  max-width: 600px;
   width: 90%;
-  padding:150px 180px;
+  padding:150px 360px;
   animation: todos-appear 1s ease-out forwards;
 }
 

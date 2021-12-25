@@ -1,3 +1,5 @@
+import React, {useState} from 'react';
+
 import Card from '../../UI/Card'
 import TodoItem from '../TodoItem/TodoItem';
 
@@ -31,15 +33,30 @@ const DUMMY_TODOS = [
 ];
 
 const Todos = () => {
-  const todosList = DUMMY_TODOS.map(todo => 
+
+  const [todos, setTodos] = useState(DUMMY_TODOS);
+
+
+  // This will eventually be extended to submit a DELETE request to a REST API
+  const deleteTodoHandler = todoId => {
+    setTodos(prevTodos => {
+      return prevTodos.filter(todo => todo.id !== todoId);
+    });
+  };
+
+  const todosList = todos.map(todo =>
     <TodoItem
       id={todo.id}
       key={todo.id}
       description={todo.description}
       date={todo.date}
       completed={todo.completed}
+      onDeleteTodo={deleteTodoHandler}
     />  
   );
+
+
+
 
   return (
     <section className={classes.todos}>
