@@ -3,9 +3,6 @@ import TodoItem from '../TodoItem/TodoItem';
 
 import classes from './Todos.module.css'
 
-// const todayDate = new Date().toString();
-// console.log(todayDate);
-
 const DUMMY_TODOS = [
   {
     id: 1,
