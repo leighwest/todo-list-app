@@ -11,8 +11,10 @@ const TodoItem = props => {
 
   return (
     <li className={classes.todo} >
-      <FontAwesomeIcon icon={['far', 'square']} onClick={deleteHandler} />
+      <FontAwesomeIcon icon={['far', 'square']} />
       <p className={classes.description}>{props.description}</p>
+      <FontAwesomeIcon icon={['far', 'trash-alt']} onClick={deleteHandler} className={classes.deleteIcon}/>
+
     </li>
   );
 };

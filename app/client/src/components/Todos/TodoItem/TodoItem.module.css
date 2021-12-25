@@ -5,8 +5,22 @@
   border-bottom: 1px solid #ccc;
 }
 
+.todo:hover > .deleteIcon {
+  visibility: visible;
+}
+
 .todo p {
   margin: 0 0 0 5px;
+}
+
+.deleteIcon {
+  color: red;
+  margin-left: auto;
+  visibility: hidden;
+}
+
+.deleteIcon:hover {
+  cursor: pointer;
 }
 
 
