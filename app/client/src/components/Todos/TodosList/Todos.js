@@ -5,7 +5,7 @@ import TodoItem from '../TodoItem/TodoItem';
 
 import classes from './Todos.module.css'
 
-const DUMMY_TODOS = [
+let DUMMY_TODOS = [
   {
     id: 1,
     description: "Practice coding",
@@ -36,13 +36,21 @@ const Todos = () => {
 
   const [todos, setTodos] = useState(DUMMY_TODOS);
 
-
   // This will eventually be extended to submit a DELETE request to a REST API
   const deleteTodoHandler = todoId => {
     setTodos(prevTodos => {
       return prevTodos.filter(todo => todo.id !== todoId);
     });
   };
+
+  // This will eventually be extended to submit a PUT request to a REST API
+  const todoCompletedStatusHandler = todoId => {
+    const todosCopy = todos.map(todo => {return {...todo}});
+    todosCopy.map(todo =>
+      todo.id === todoId ? todo.completed = !todo.completed : todo
+    )
+    setTodos(todosCopy);
+  }
 
   const todosList = todos.map(todo =>
     <TodoItem
@@ -52,10 +60,9 @@ const Todos = () => {
       date={todo.date}
       completed={todo.completed}
       onDeleteTodo={deleteTodoHandler}
+      onUpdateTodoStatus={todoCompletedStatusHandler}
     />  
   );
-
-
 
 
   return (
