@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import classes from './TodoItem.module.css'
 
 const TodoItem = props => {
-
-  // const [completed, setCompleted] = useState(props.completed);
 
   const deleteHandler = () => {
     props.onDeleteTodo(props.id);
@@ -16,7 +14,7 @@ const TodoItem = props => {
   };
 
   return (
-    <li className={classes.todo} >
+    <li className={props.completed ? [classes.todo, classes.completed].join(' ') : classes.todo } >
       {!props.completed && <FontAwesomeIcon icon={['far', 'square']} onClick={completeHandler} />}
       {props.completed && <FontAwesomeIcon icon={['far', 'check-square']} onClick={completeHandler} />}
       <p>{props.description}</p>

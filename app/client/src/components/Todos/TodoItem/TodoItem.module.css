@@ -9,6 +9,10 @@
   margin: 0 0 0 5px;
 }
 
+.completed {
+  color: #ccc;
+}
+
 .todo > .deleteIcon {
   color: red;
   margin-left: auto;
