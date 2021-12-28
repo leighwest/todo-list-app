@@ -23,9 +23,13 @@ public class TodoRestController {
         return repository.save(todo);
     }
 
-    @RequestMapping(value = "/todos", method = RequestMethod.PUT)
-    public Todo updateTodo(@RequestBody Todo todo) {
-        return repository.save(todo);
+    @RequestMapping(value = "/todos/{id}", method = RequestMethod.PUT)
+    public Todo updateTodo(@RequestBody Todo todo, @PathVariable("id") Long id) {
+        Todo storedTodo = repository.getById(id);
+        storedTodo.setDescription(todo.getDescription());
+        storedTodo.setCompleted(todo.isCompleted());
+
+        return repository.save(storedTodo);
     }
 
     @RequestMapping(value = "/todos/{id}", method = RequestMethod.DELETE)
