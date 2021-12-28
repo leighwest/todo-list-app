@@ -12,10 +12,13 @@ import java.util.List;
 @RestController
 public class TodoRestController {
 
-    @Autowired
-    TodoRepository repository;
+    private final TodoRepository repository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoRestController.class);
+
+    public TodoRestController(TodoRepository repository) {
+        this.repository = repository;
+    }
 
     @RequestMapping(value = "/todos", method= RequestMethod.GET)
     public List<Todo> getTodos() {
