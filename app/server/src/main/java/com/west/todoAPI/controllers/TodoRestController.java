@@ -20,19 +20,19 @@ public class TodoRestController {
         this.repository = repository;
     }
 
-    @RequestMapping(value = "/todos", method= RequestMethod.GET)
+    @GetMapping("/todos")
     public List<Todo> getTodos() {
         LOGGER.info("Finding all todos");
         return repository.findAll();
     }
 
-    @RequestMapping(value = "/todos", method = RequestMethod.POST)
+    @PostMapping("/todos")
     public Todo createTodo(@RequestBody Todo todo) {
         LOGGER.info("Creating todo: " + todo.toString());
         return repository.save(todo);
     }
 
-    @RequestMapping(value = "/todos/{id}", method = RequestMethod.PUT)
+    @PutMapping("/todos/{id}")
     public Todo updateTodo(@RequestBody Todo todo, @PathVariable("id") Long id) {
         Todo storedTodo = repository.getById(id);
         storedTodo.setDescription(todo.getDescription());
@@ -41,7 +41,7 @@ public class TodoRestController {
         return repository.save(storedTodo);
     }
 
-    @RequestMapping(value = "/todos/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/todos/{id}")
     public void deleteTodo(@PathVariable("id") Long id) {
         LOGGER.info("Deleting todo with id: " + id);
         repository.deleteById(id);
