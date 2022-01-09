@@ -36,14 +36,16 @@ import classes from './Todos.module.css'
 const Todos = () => {
 
   const [todos, setTodos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     TodoDb.getTodos().then(todos => {
       if (!todos.message) {
         setTodos(todos);
+        setIsLoading(false);
       }
     })
-  }, [])
+  }, [isLoading])
 
   // This will eventually be extended to submit a DELETE request to a REST API
   const deleteTodoHandler = todoId => {
@@ -76,8 +78,10 @@ const Todos = () => {
   return (
     <section className={classes.todos}>
       <Card>
+
         <ul>
-          {todosList}
+          {isLoading && <p>Loading...</p>}
+          {!isLoading && todosList}
         </ul>
       </Card>
     </section>

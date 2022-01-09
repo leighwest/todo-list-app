@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class TodoRestController {
@@ -20,8 +21,10 @@ public class TodoRestController {
     }
 
     @GetMapping("/todos")
-    public List<Todo> getTodos() {
+    public List<Todo> getTodos() throws InterruptedException {
         LOGGER.info("Finding all todos");
+        TimeUnit.SECONDS.sleep(2);
+
         return repository.findAll();
     }
 
