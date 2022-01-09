@@ -10,7 +10,6 @@ const TodoDb = {
       method: "GET",
       mode: 'cors',
       headers: headers
-
     })
       .then(response => {
         return response.json();
