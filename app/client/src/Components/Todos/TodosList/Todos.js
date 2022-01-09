@@ -1,40 +1,49 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Card from '../../UI/Card'
 import TodoItem from '../TodoItem/TodoItem';
+import TodoDb from "../../../Util/TodoDb";
 
 import classes from './Todos.module.css'
 
-let DUMMY_TODOS = [
-  {
-    id: 1,
-    description: "Practice coding",
-    date: (new Date().toString()),
-    completed: false,
-  },
-  {
-    id: 2,
-    description: "Wash car",
-    date: (new Date().toString()),
-    completed: false,
-  },
-  {
-    id: 3,
-    description: "Grocery shopping",
-    date: (new Date().toString()),
-    completed: true,
-  },
-  {
-    id: 4,
-    description: "Meditate",
-    date: (new Date().toString()),
-    completed: false,
-  }
-];
+// let DUMMY_TODOS = [
+//   {
+//     id: 1,
+//     description: "Practice coding",
+//     date: (new Date().toString()),
+//     completed: false,
+//   },
+//   {
+//     id: 2,
+//     description: "Wash car",
+//     date: (new Date().toString()),
+//     completed: false,
+//   },
+//   {
+//     id: 3,
+//     description: "Grocery shopping",
+//     date: (new Date().toString()),
+//     completed: true,
+//   },
+//   {
+//     id: 4,
+//     description: "Meditate",
+//     date: (new Date().toString()),
+//     completed: false,
+//   }
+// ];
 
 const Todos = () => {
 
-  const [todos, setTodos] = useState(DUMMY_TODOS);
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    TodoDb.getTodos().then(todos => {
+      if (!todos.message) {
+        setTodos(todos);
+      }
+    })
+  }, [])
 
   // This will eventually be extended to submit a DELETE request to a REST API
   const deleteTodoHandler = todoId => {
@@ -61,9 +70,8 @@ const Todos = () => {
       completed={todo.completed}
       onDeleteTodo={deleteTodoHandler}
       onUpdateTodoStatus={todoCompletedStatusHandler}
-    />  
+    />
   );
-
 
   return (
     <section className={classes.todos}>
