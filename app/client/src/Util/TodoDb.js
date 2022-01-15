@@ -1,19 +1,20 @@
 const TodoDb = {
-  getTodos() {
+  async getTodos() {
     let headers = new Headers();
 
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
     headers.append('Origin','http://localhost:3000');
 
-    return fetch('http://localhost:8080/todos', {
+    const response = await fetch('http://localhost:8080/todos', {
       method: "GET",
       mode: 'cors',
       headers: headers
     })
-      .then(response => {
-        return response.json();
-      })
+
+    const data = await response.json();
+
+    return data;
   }
 }
 
