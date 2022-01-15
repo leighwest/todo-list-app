@@ -11,6 +11,10 @@
   padding: 0;
 }
 
+.todos p {
+  text-align: center;
+}
+
 @keyframes todos-appear {
   from {
     opacity: 0;

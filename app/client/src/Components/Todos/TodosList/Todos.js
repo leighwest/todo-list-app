@@ -6,33 +6,6 @@ import TodoDb from "../../../Util/TodoDb";
 
 import classes from './Todos.module.css'
 
-// let DUMMY_TODOS = [
-//   {
-//     id: 1,
-//     description: "Practice coding",
-//     date: (new Date().toString()),
-//     completed: false,
-//   },
-//   {
-//     id: 2,
-//     description: "Wash car",
-//     date: (new Date().toString()),
-//     completed: false,
-//   },
-//   {
-//     id: 3,
-//     description: "Grocery shopping",
-//     date: (new Date().toString()),
-//     completed: true,
-//   },
-//   {
-//     id: 4,
-//     description: "Meditate",
-//     date: (new Date().toString()),
-//     completed: false,
-//   }
-// ];
-
 const Todos = () => {
 
   const [todos, setTodos] = useState([]);
@@ -75,13 +48,21 @@ const Todos = () => {
     />
   );
 
+  let content = <p>Nothing to do. Time to relax!</p>
+
+  if (todos.length > 0) {
+    content = todosList;
+  }
+
+  if (isLoading) {
+    content = <p>Loading...</p>
+  }
+
   return (
     <section className={classes.todos}>
       <Card>
-
         <ul>
-          {isLoading && <p>Loading...</p>}
-          {!isLoading && todosList}
+          {content}
         </ul>
       </Card>
     </section>
