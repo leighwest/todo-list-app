@@ -10,13 +10,17 @@ const Todos = () => {
 
   const [todos, setTodos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     TodoDb.getTodos().then(todos => {
       if (!todos.message) {
         setTodos(todos);
-        setIsLoading(false);
+      } else {
+        console.error(todos.message);
+        setError("Unable to fetch your todos. Please contact the development team.");
       }
+      setIsLoading(false);
     })
   }, [isLoading])
 
@@ -52,6 +56,10 @@ const Todos = () => {
 
   if (todos.length > 0) {
     content = todosList;
+  }
+
+  if (error) {
+    content = <p>{error}</p>
   }
 
   if (isLoading) {
