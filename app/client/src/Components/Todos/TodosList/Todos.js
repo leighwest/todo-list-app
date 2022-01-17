@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Card from '../../UI/Card'
+// import Card from '../../UI/Card'
 import TodoItem from '../TodoItem/TodoItem';
 import TodoDb from "../../../Util/TodoDb";
 
@@ -68,11 +68,11 @@ const Todos = () => {
 
   return (
     <section className={classes.todos}>
-      <Card>
+      {/* <Card> */}
         <ul>
           {content}
         </ul>
-      </Card>
+      {/* </Card> */}
     </section>
   )
 };

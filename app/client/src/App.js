@@ -1,17 +1,16 @@
 import Todos from './Components/Todos/TodosList/Todos';
-
-// import { library } from '@fortawesome/fontawesome-svg-core'
-// import { faSquare, faCheckSquare, faTrashAlt} from '@fortawesome/free-regular-svg-icons'
+import Footer from './Components/Footer/Footer';
+import Card from './Components/UI/Card';
 
 import classes from './App.module.css';
-
-// library.add(faSquare, faCheckSquare, faTrashAlt)
-
 
 const App = () => {
   return (
     <div className={classes.wrapper}>
-      <Todos />
+      <Card>
+        <Todos />
+        <Footer />
+      </Card>
     </div>
   );
 }

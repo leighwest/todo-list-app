@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import classes from './TodoItem.module.css'
+import classes from './TodoItem.module.css';
 
 const TodoItem = props => {
 

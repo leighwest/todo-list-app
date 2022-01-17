@@ -1,0 +1,18 @@
+.add-new-task-btn {
+  border-radius: 4px;
+  padding: .72rem 1.7rem;
+  /* border: none; */
+  border: 1px solid #7182FF;
+  background-color: #fff;
+  color: #7182FF;
+  font-weight: 400;
+  /* transition: background-color .5s; */
+  font-size: 1rem;
+  width: 150px;
+  margin: 16px;
+}
+
+.add-new-task-btn:hover {
+  cursor: pointer;
+  /* background-color: #78bd4f; */
+}
