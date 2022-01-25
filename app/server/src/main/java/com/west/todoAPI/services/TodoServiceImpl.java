@@ -1,8 +1,7 @@
 package com.west.todoAPI.services;
 
-import com.west.todoAPI.controllers.TodoRestController;
 import com.west.todoAPI.entities.Todo;
-import com.west.todoAPI.exceptions.NotFoundException;
+//import com.west.todoAPI.exceptions.NotFoundException;
 import com.west.todoAPI.repositories.TodoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -37,9 +35,8 @@ public class TodoServiceImpl implements TodoService {
         Optional<Todo> todoOptional = todoRepository.findById(l);
 
         if (!todoOptional.isPresent()) {
-            throw new NotFoundException("Todo not found!");
+            throw new RuntimeException("Todo not found!");
         }
-
         return todoOptional.get();
     }
 

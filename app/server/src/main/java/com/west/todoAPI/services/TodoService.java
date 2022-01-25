@@ -3,6 +3,7 @@ package com.west.todoAPI.services;
 import com.west.todoAPI.entities.Todo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TodoService {
 
