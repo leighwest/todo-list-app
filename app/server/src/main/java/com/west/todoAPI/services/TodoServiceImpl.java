@@ -20,7 +20,6 @@ public class TodoServiceImpl implements TodoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoServiceImpl.class);
 
-
     public TodoServiceImpl(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
@@ -36,11 +35,8 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public Todo findById(Long l) {
         Optional<Todo> todoOptional = todoRepository.findById(l);
-        LOGGER.info("In the findById function, todoOptional is: " + todoOptional);
-
 
         if (!todoOptional.isPresent()) {
-            System.out.println("todoOptional is not present");
             throw new NotFoundException("Todo not found!");
         }
 
@@ -49,11 +45,13 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Todo save(Todo todo) {
-        return null;
+        Todo savedTodo = todoRepository.save(todo);
+        LOGGER.info("Saving todo with ID: " + savedTodo.getId());
+        return savedTodo;
     }
 
     @Override
     public void deleteById(Long idToDelete) {
-
+        todoRepository.deleteById(idToDelete);
     }
 }
