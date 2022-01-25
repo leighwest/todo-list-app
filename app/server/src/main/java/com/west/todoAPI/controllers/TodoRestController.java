@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class TodoRestController {
 
-    private final TodoService todoService;
+    private final TodoServiceImpl todoService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoRestController.class);
 
@@ -52,6 +52,7 @@ public class TodoRestController {
     public void deleteTodo(@PathVariable("id") Long id) {
 
         Optional<Todo> todoOptional = Optional.ofNullable(todoService.findById(id));
+        LOGGER.info("In the delete function, todoOptional is: " + todoOptional);
 
         if (!todoOptional.isPresent()) {
             throw new NotFoundException("Todo not found!");
