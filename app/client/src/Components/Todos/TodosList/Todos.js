@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
-// import Card from '../../UI/Card'
 import TodoItem from '../TodoItem/TodoItem';
 import TodoDb from "../../../Util/TodoDb";
+import TodoContext from '../../../context/todo-count-context';
 
 import classes from './Todos.module.css'
 
@@ -11,6 +11,8 @@ const Todos = () => {
   const [todos, setTodos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  let ctx = useContext(TodoContext);
 
   useEffect(() => {
     TodoDb.getTodos().then(todos => {
@@ -22,13 +24,14 @@ const Todos = () => {
       }
       setIsLoading(false);
     })
-  }, [isLoading])
+  }, [])
 
-  // This will eventually be extended to submit a DELETE request to a REST API
   const deleteTodoHandler = todoId => {
     setTodos(prevTodos => {
       return prevTodos.filter(todo => todo.id !== todoId);
     });
+
+    TodoDb.deleteTodo(todoId);
   };
 
   // This will eventually be extended to submit a PUT request to a REST API
@@ -39,6 +42,9 @@ const Todos = () => {
     )
     setTodos(todosCopy);
   }
+
+  ctx = todos.length;
+  console.log(`ctx in Todo.js is equal to: ${ctx}`);
 
   const todosList = todos.map(todo =>
     <TodoItem
