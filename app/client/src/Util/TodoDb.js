@@ -19,7 +19,30 @@ const TodoDb = {
     } catch (error) {
       return error;
     }   
+  },
+
+  async deleteTodo(id) {
+    let headers = new Headers();
+
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+    headers.append('Origin','http://localhost:3000');
+
+    try {
+      const response = await fetch(`http://localhost:8080/todos/${id}`, {
+      method: "DELETE",
+      mode: 'cors',
+      headers: headers
+    })
+
+    const data = await response.json();
+    console.log(`the data is: ${data}`)
+
+    return data;
+    } catch (error) {
+      return error;
+    }
   }
 }
 
-export default TodoDb
+export default TodoDb;
