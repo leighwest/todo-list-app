@@ -1,14 +1,13 @@
 package com.west.todoAPI.controllers;
 
 import com.west.todoAPI.entities.Todo;
-//import com.west.todoAPI.exceptions.NotFoundException;
-//import com.west.todoAPI.repositories.TodoRepository;
-//import com.west.todoAPI.services.TodoService;
 import com.west.todoAPI.services.TodoServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,9 +32,19 @@ public class TodoRestController {
 
 
     @PostMapping("/todos")
-    public Todo createTodo(@RequestBody Todo todo) {
+    public String createTodo(@Valid @RequestBody Todo todo, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> {
+                LOGGER.info(objectError.toString());
+            });
+
+            return "Invalid todo";
+        }
+
         LOGGER.info("Creating todo: " + todo.toString());
-        return todoService.save(todo);
+        todoService.save(todo);
+        return "Todo created";
     }
 
     @PutMapping("/todos/{id}")

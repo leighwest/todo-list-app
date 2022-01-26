@@ -6,14 +6,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
+import javax.validation.constraints.*;
+
+
 @Entity
 public class Todo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @NotBlank(message = "Description is mandatory")
+    @Size(min=3, message="Description must be at least 3 characters in length")
     private String description;
+
+    @FutureOrPresent
     private LocalDate date;
+
+    @AssertFalse
     private boolean completed;
 
     public long getId() {
