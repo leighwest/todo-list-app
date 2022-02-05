@@ -8,11 +8,9 @@ import classes from './Todos.module.css'
 
 const Todos = () => {
 
-  const [todos, setTodos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  let ctx = useContext(TodoContext);
+  const {todos, setTodos} = useContext(TodoContext);
 
   useEffect(() => {
     TodoDb.getTodos().then(todos => {
@@ -43,9 +41,6 @@ const Todos = () => {
     setTodos(todosCopy);
   }
 
-  ctx = todos.length;
-  console.log(`ctx in Todo.js is equal to: ${ctx}`);
-
   const todosList = todos.map(todo =>
     <TodoItem
       id={todo.id}
@@ -74,11 +69,9 @@ const Todos = () => {
 
   return (
     <section className={classes.todos}>
-      {/* <Card> */}
         <ul>
           {content}
         </ul>
-      {/* </Card> */}
     </section>
   )
 };
