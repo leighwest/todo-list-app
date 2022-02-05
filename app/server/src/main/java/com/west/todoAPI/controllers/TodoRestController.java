@@ -11,6 +11,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.http.ResponseEntity;
+
+
 @RestController
 public class TodoRestController {
 
@@ -32,19 +35,17 @@ public class TodoRestController {
 
 
     @PostMapping("/todos")
-    public String createTodo(@Valid @RequestBody Todo todo, BindingResult bindingResult) {
+    public ResponseEntity<Todo> createTodo(@Valid @RequestBody Todo todo, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> {
                 LOGGER.info(objectError.toString());
             });
-
-            return "Invalid todo";
         }
 
         LOGGER.info("Creating todo: " + todo.toString());
         todoService.save(todo);
-        return "Todo created";
+        return ResponseEntity.accepted().body(todo);
     }
 
     @PutMapping("/todos/{id}")
