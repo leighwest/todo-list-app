@@ -9,6 +9,10 @@
   margin: 0 0 0 5px;
 }
 
+ul svg {
+  margin-top: 1.5px;
+}
+
 .completed {
   color: #ccc;
 }
@@ -29,6 +33,7 @@
 
 svg {
   cursor: pointer;
+
 }
 
 
