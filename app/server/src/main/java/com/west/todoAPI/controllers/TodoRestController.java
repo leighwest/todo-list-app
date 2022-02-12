@@ -2,6 +2,10 @@ package com.west.todoAPI.controllers;
 
 import com.west.todoAPI.entities.Todo;
 import com.west.todoAPI.services.TodoServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -15,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 
 @RestController
+@Tag(name="Todo Rest Endpoint")
 public class TodoRestController {
 
     private final TodoServiceImpl todoService;
@@ -26,6 +31,7 @@ public class TodoRestController {
     }
 
     @GetMapping("/todos")
+    @Operation(summary="Returns a list of todos")
     public List<Todo> getTodos() throws InterruptedException {
         LOGGER.info("Finding all todos");
         TimeUnit.SECONDS.sleep(2);
@@ -35,8 +41,9 @@ public class TodoRestController {
 
 
     @PostMapping("/todos")
-    public ResponseEntity<Todo> createTodo(@Valid @RequestBody Todo todo, BindingResult bindingResult) {
-
+    @Operation(summary="Creates an individual todo")
+    public @ApiResponse(description="Todo object") ResponseEntity<Todo> createTodo(@Valid @RequestBody Todo todo,
+                                                                                   BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> {
                 LOGGER.info(objectError.toString());
@@ -49,7 +56,8 @@ public class TodoRestController {
     }
 
     @PutMapping("/todos/{id}")
-    public Todo updateTodo(@RequestBody Todo todo, @PathVariable("id") Long id) {
+    @Operation(summary="Updates an individual todo by ID")
+    public @ApiResponse(description="Todo object") Todo updateTodo(@Parameter(description="ID of the todo") @RequestBody Todo todo, @PathVariable("id") Long id) {
         Todo storedTodo = todoService.findById(id);
         storedTodo.setDescription(todo.getDescription());
         storedTodo.setCompleted(todo.isCompleted());
@@ -58,7 +66,8 @@ public class TodoRestController {
     }
 
     @DeleteMapping("/todos/{id}")
-    public void deleteTodo(@PathVariable("id") Long id) {
+    @Operation(summary="Deletes an individual todo by ID")
+    public void deleteTodo(@Parameter(description="ID of the todo") @PathVariable("id") Long id) {
 
         LOGGER.info("Deleting todo with id: " + id);
 
