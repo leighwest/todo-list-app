@@ -1,7 +1,11 @@
 package com.west.todoAPI;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.west.todoAPI.entities.Todo;
 import com.west.todoAPI.services.TodoServiceImpl;
+import com.west.todoAPI.validator.TodoValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -11,17 +15,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest
-
 public class TodoApiApplicationTests {
 
 	@Autowired
@@ -30,19 +34,28 @@ public class TodoApiApplicationTests {
 	@MockBean
 	private TodoServiceImpl todoService;
 
+    @MockBean
+    private TodoValidator tv;
+
 	@Test
 	public void testFindAll() throws Exception {
 
 		Todo todo = new Todo();
 		todo.setId(1);
 		todo.setDescription("Practice coding");
-		todo.setDate(LocalDate.now());
 		todo.setCompleted(false);
 
 		List<Todo> todos = Arrays.asList(todo);
 		when(todoService.getTodos()).thenReturn(todos);
+        when(tv.validate(todo)).thenReturn(Optional.empty());
 
-		mockMvc.perform(get("/todoapi/todos/").contextPath("/todoapi")).andExpect(status().isOk());
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
+
+		mockMvc.perform(get("/todoapi/todos/").contextPath("/todoapi")).andExpect(status().isOk())
+				.andExpect(content().json(objectWriter.writeValueAsString(todos)));
 	}
 
 }

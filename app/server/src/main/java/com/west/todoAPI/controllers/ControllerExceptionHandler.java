@@ -23,12 +23,12 @@ public class ControllerExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(NullPointerException.class)
     public String handleIdNotFound(Exception exception) {
 
         LOGGER.info(exception.getLocalizedMessage());
 
-        return "Todo not found.";
+        return exception.getLocalizedMessage();
     }
 
 

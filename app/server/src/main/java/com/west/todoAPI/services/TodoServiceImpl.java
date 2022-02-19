@@ -1,7 +1,6 @@
 package com.west.todoAPI.services;
 
 import com.west.todoAPI.entities.Todo;
-//import com.west.todoAPI.exceptions.NotFoundException;
 import com.west.todoAPI.repositories.TodoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
