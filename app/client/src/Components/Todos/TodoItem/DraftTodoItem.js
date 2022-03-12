@@ -18,6 +18,7 @@ const DraftTodoItem = props => {
     <form onSubmit={handleSubmit}>
       <input type="text" name="name" className={classes.draftTodo}autoFocus placeholder='Enter todo'/>
       {/* <input type="submit" value="Submit" /> */}
+      
     </form>
   );
 };
