@@ -7,7 +7,8 @@ import TodoContext from "../../context/todo-count-context";
 import classes from './Footer.module.css'
 
 
-const Footer = memo(() => {
+// const Footer = memo(props => {
+const Footer = (props) => {
 
   let ctx = useContext(TodoContext);
 
@@ -24,9 +25,10 @@ const Footer = memo(() => {
   return (
     <div className={classes.wrapper}>
       <p className={classes.todosCount}>{tasksToDo}</p>
-      <Button type={"add-new-task-btn"}/>
+      <Button class={"add-new-task-btn"} onClick={props.addDraftTodo}/>
     </div>
   );
-});
+// });
+  };
 
 export default Footer;

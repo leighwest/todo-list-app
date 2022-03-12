@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import TodoItem from '../TodoItem/TodoItem';
+import DraftTodoItem from '../TodoItem/DraftTodoItem';
 import TodoDb from "../../../Util/TodoDb";
 import TodoContext from '../../../context/todo-count-context';
 
 import classes from './Todos.module.css'
 
-const Todos = () => {
+const Todos = props => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -71,6 +72,7 @@ const Todos = () => {
     <section className={classes.todos}>
         <ul>
           {content}
+          {props.draftTodo && <DraftTodoItem/>}
         </ul>
     </section>
   )
