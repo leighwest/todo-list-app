@@ -11,13 +11,17 @@ const DraftTodoItem = props => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" name="name" className={classes.draftTodo}autoFocus placeholder='Enter todo'/>
-      {/* <input type="submit" value="Submit" /> */}
+      <div className={classes.draftTodo}>
+        <input type="text" name="name"  autoFocus placeholder='Enter todo' />
+        {/* <input type="submit" value="Submit" /> */}
+        <FontAwesomeIcon icon={['fa', 'check-circle']} onClick={() => console.log("clicked!")} className={classes.tickIcon} />
+      </div>
+
     </form>
   );
 };
