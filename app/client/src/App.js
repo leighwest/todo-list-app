@@ -13,16 +13,18 @@ const App =  memo(() => {
   const todoValue = React.useMemo(() => ({todos, setTodos}), [todos, setTodos]);
 
   const addDraftTodo = () => {
-    console.log("clicked!");
     setDraftTodo(true);
   };
+
+  const deleteDraftTodo = () => {
+    setDraftTodo(false);
+  }
   
   return (
     <div className={classes.wrapper}>
       <Card>
         <TodoContext.Provider value={todoValue}>
-          {console.log(`in App.js draftTodo is: ${draftTodo}`)}
-          <Todos draftTodo={draftTodo}/>
+          <Todos draftTodo={draftTodo} deleteDraftTodo={deleteDraftTodo}/>
           <Footer addDraftTodo={addDraftTodo}/>
         </TodoContext.Provider>
       </Card>

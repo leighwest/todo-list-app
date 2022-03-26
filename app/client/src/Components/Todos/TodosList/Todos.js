@@ -72,7 +72,7 @@ const Todos = props => {
     <section className={classes.todos}>
         <ul>
           {content}
-          {props.draftTodo && <DraftTodoItem/>}
+          {props.draftTodo && <DraftTodoItem deleteDraftTodo={props.deleteDraftTodo}/>}
         </ul>
     </section>
   )
