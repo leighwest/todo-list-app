@@ -20,6 +20,7 @@ const DraftTodoItem = props => {
         <input type="text" name="name"  autoFocus placeholder='Enter todo' />
         {/* <input type="submit" value="Submit" /> */}
         <FontAwesomeIcon icon={['fa', 'check-circle']} onClick={() => console.log("clicked!")} className={classes.tickIcon} />
+        <FontAwesomeIcon icon={['fa', 'times-circle']} onClick={() => console.log("clicked!")} className={classes.crossIcon} />
       </div>
 
     </form>
