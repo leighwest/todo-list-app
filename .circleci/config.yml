@@ -54,7 +54,7 @@ jobs:
 
       - run:
           name: "Codecov token"
-          command: echo '8978c3ba-148b-4ebf-a938-6f4b48f26a36'
+          command: CODECOV_TOKEN='8978c3ba-148b-4ebf-a938-6f4b48f26a36'
 
 
       - run:
