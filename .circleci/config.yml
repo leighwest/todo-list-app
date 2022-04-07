@@ -9,7 +9,7 @@ workflows:
   upload-to-codecov:
     jobs:
       - checkout
-      - codecov/upload
+      - codecov/upload 
 jobs:
   build:
     docker:
