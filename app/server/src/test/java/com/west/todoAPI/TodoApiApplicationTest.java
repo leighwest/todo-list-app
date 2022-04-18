@@ -1,6 +1,5 @@
 package com.west.todoAPI;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.west.todoAPI.entities.Todo;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest
-public class TodoApiApplicationTests {
+public class TodoApiApplicationTest {
 
 	@Autowired
 	MockMvc mockMvc;
