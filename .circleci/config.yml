@@ -10,6 +10,10 @@ version: '2.1'
 #     jobs:
 #       - checkout
 #       - codecov/upload 
+
+codecov:
+  max_report_age: off
+  
 jobs:
   build:
     docker:
