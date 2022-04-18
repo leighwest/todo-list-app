@@ -52,7 +52,7 @@ jobs:
       - store_test_results:
           path: target/surefire-reports
 
-     - run: |
+      - run: |
           curl -Os https://uploader.codecov.io/latest/linux/codecov
           chmod +x codecov
           ./codecov 
