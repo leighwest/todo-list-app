@@ -26,12 +26,14 @@ const Todos = props => {
   }, [setTodos])
 
   const addTodoHandler = todo => {
+    console.log(`in addTodoHandler todoID is: ${todo.id}`)
     let _todos = [...todos];
     _todos.push(todo);
     setTodos(_todos);
   }
 
   const deleteTodoHandler = todoId => {
+    console.log(`deleteTodoHandler called with todoId: ${todoId}`)
     setTodos(prevTodos => {
       return prevTodos.filter(todo => todo.id !== todoId);
     });

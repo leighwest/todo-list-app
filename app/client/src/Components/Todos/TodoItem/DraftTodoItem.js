@@ -24,8 +24,10 @@ const DraftTodoItem = props => {
       date: new Date(),
       completed: false
     }
-    TodoDb.createTodo(todo);
-    props.addTodo(todo);
+    TodoDb.createTodo(todo).then(
+      res => props.addTodo(res)
+    );
+    // props.addTodo(response);
     props.deleteDraftTodo();
   };
 
