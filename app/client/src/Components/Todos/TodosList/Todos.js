@@ -23,7 +23,13 @@ const Todos = props => {
       }
       setIsLoading(false);
     })
-  }, [])
+  }, [setTodos])
+
+  const addTodoHandler = todo => {
+    let _todos = [...todos];
+    _todos.push(todo);
+    setTodos(_todos);
+  }
 
   const deleteTodoHandler = todoId => {
     setTodos(prevTodos => {
@@ -72,7 +78,7 @@ const Todos = props => {
     <section className={classes.todos}>
         <ul>
           {content}
-          {props.draftTodo && <DraftTodoItem deleteDraftTodo={props.deleteDraftTodo}/>}
+          {props.draftTodo && <DraftTodoItem deleteDraftTodo={props.deleteDraftTodo} addTodo={addTodoHandler}/>}
         </ul>
     </section>
   )

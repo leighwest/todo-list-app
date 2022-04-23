@@ -19,15 +19,14 @@ const DraftTodoItem = props => {
   const handleSubmit = event => {
     event.preventDefault();
     // if validate(todoDescription)
-    const todayDate = new Date();
     const todo = {
       description: todoDescription,
-      // date: `${todayDate.getFullYear}-${todayDate.getMonth}-${todayDate.getDate}`,
       date: new Date(),
       completed: false
     }
     TodoDb.createTodo(todo);
-
+    props.addTodo(todo);
+    props.deleteDraftTodo();
   };
 
   return (
@@ -38,7 +37,6 @@ const DraftTodoItem = props => {
         <FontAwesomeIcon icon={['fa', 'check-circle']} onClick={handleSubmit} className={classes.tickIcon} />
         <FontAwesomeIcon icon={['fa', 'times-circle']} onClick={deleteHandler} className={classes.crossIcon} />
       </div>
-
     </form>
   );
 };
