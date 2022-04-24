@@ -25,9 +25,14 @@ const DraftTodoItem = props => {
       completed: false
     }
     TodoDb.createTodo(todo).then(
-      res => props.addTodo(res)
+      res => {
+        if (res.errorMessage) {
+          console.log(`createTodo returned an error: ${res.errorMessage}`)
+        } else {
+          props.addTodo(res)
+        }
+      }
     );
-    // props.addTodo(response);
     props.deleteDraftTodo();
   };
 

@@ -49,7 +49,6 @@ public class TodoRestController {
     @Operation(summary="Creates an individual todo")
     public @ApiResponse(description="Todo object") ResponseEntity<Object> createTodo(@Valid @RequestBody Todo todo,
                                                                                    BindingResult bindingResult) {
-
         Optional<String> validationMessage = tv.validate(todo);
 
         if (validationMessage.isPresent()) {
