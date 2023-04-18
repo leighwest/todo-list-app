@@ -50,7 +50,7 @@ Send the POST request to: localhost:8080/todos
 
 ```
 {
-	"id": 3,
+	"id": 1,
 	"description": "My first todo",
 	"date": "20/04/2024",
 	"completed": false
