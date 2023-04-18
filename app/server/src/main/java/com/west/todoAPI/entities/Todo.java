@@ -1,5 +1,7 @@
 package com.west.todoAPI.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,7 @@ public class Todo {
 
     private String description;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate date;
 
     @AssertFalse

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,7 +66,7 @@ public class TodoRestController {
         LOGGER.info("Creating todo: " + todo);
         todoService.save(todo);
 
-        return ResponseEntity.accepted().body(todo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(todo);
     }
 
 
