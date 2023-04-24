@@ -1,8 +1,7 @@
 package com.west.todoAPI.controllers;
 
-import com.west.todoAPI.entities.ValidationError;
 import com.west.todoAPI.entities.Todo;
-import com.west.todoAPI.services.TodoServiceImpl;
+import com.west.todoAPI.services.TodoService;
 import com.west.todoAPI.validator.TodoValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,12 +25,11 @@ import org.springframework.http.ResponseEntity;
 @Tag(name="Todo Rest Endpoint")
 public class TodoRestController {
 
-    private final TodoServiceImpl todoService;
+    private final TodoService todoService;
     private final TodoValidator tv;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoRestController.class);
 
-    public TodoRestController(TodoServiceImpl todoService, TodoValidator tv) {
+    public TodoRestController(TodoService todoService, TodoValidator tv) {
         this.todoService = todoService;
         this.tv = tv;
     }
@@ -53,8 +51,7 @@ public class TodoRestController {
         Optional<String> validationMessage = tv.validate(todo);
 
         if (validationMessage.isPresent()) {
-            ValidationError validationError = new ValidationError(validationMessage.get());
-            return ResponseEntity.badRequest().body(validationError);
+            return ResponseEntity.badRequest().body(validationMessage);
         }
 
         if(bindingResult.hasErrors()) {
