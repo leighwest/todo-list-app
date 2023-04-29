@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  server:
+    build: ./app/server
+    ports:
+      - '3306:3306'
+    volumes: 
+      - data:/var/lib/mysql
+
+# must specify named volumes (not anonymous / bind mounts)
+volumes:
+  data:
