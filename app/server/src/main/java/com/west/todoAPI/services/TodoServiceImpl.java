@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -41,10 +42,24 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Todo save(Todo todo) {
+        todo.setUuid(UUID.randomUUID());
         todo.setCompleted(false);
         Todo savedTodo = todoRepository.save(todo);
         LOGGER.info("Saving todo with ID: " + savedTodo.getId());
         return savedTodo;
+    }
+
+    @Override
+    public Todo update(Long id, Todo todo) {
+        Todo storedTodo = findById(id);
+        storedTodo.setDescription(todo.getDescription());
+        storedTodo.setCompleted(todo.isCompleted());
+        storedTodo.setDate(todo.getDate());
+
+        todoRepository.save(storedTodo);
+        LOGGER.info("Updating todo with ID: " + storedTodo.getId());
+
+        return storedTodo;
     }
 
     @Override

@@ -59,12 +59,10 @@ public class TodoRestController {
 
     @PutMapping("/todos/{id}")
     @Operation(summary="Updates an individual todo by ID")
-    public @ApiResponse(description="Todo object") Todo updateTodo(@Parameter(description="ID of the todo") @RequestBody Todo todo, @PathVariable("id") Long id) {
-        Todo storedTodo = todoService.findById(id);
-        storedTodo.setDescription(todo.getDescription());
-        storedTodo.setCompleted(todo.isCompleted());
-        LOGGER.info("Updating todo with id: " + id + ". Updated todo: " + storedTodo);
-        return todoService.save(storedTodo);
+    public @ApiResponse(description="Todo object") ResponseEntity<Todo> updateTodo(@Parameter(description="ID of the todo") @RequestBody Todo todo, @PathVariable("id") Long id) {
+        Todo updatedTodo = todoService.update(id, todo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedTodo);
     }
 
     @DeleteMapping("/todos/{id}")

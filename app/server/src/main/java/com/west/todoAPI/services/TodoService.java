@@ -8,9 +8,11 @@ public interface TodoService {
 
     List<Todo> getTodos();
 
-    Todo findById(Long l);
+    Todo findById(Long id);
 
     Todo save(Todo todo);
+
+    Todo update(Long id, Todo todo);
 
     void deleteById(Long idToDelete);
 }
