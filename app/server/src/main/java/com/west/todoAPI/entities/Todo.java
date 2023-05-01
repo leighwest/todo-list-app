@@ -8,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
-import javax.validation.constraints.*;
-
 @Entity
 public class Todo {
 
@@ -22,7 +20,6 @@ public class Todo {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate date;
 
-    @AssertFalse
     private boolean completed;
 
     public long getId() {

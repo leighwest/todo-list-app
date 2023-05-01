@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -46,18 +43,11 @@ public class TodoRestController {
 
     @PostMapping("/todos")
     @Operation(summary="Creates an individual todo")
-    public @ApiResponse(description="Todo object") ResponseEntity<Object> createTodo(@Valid @RequestBody Todo todo,
-                                                                                   BindingResult bindingResult) {
+    public @ApiResponse(description="Todo object") ResponseEntity<Object> createTodo(@RequestBody Todo todo) {
         Optional<String> validationMessage = tv.validate(todo);
 
         if (validationMessage.isPresent()) {
             return ResponseEntity.badRequest().body(validationMessage);
-        }
-
-        if(bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(objectError -> {
-                LOGGER.info(objectError.toString());
-            });
         }
 
         LOGGER.info("Creating todo: " + todo);

@@ -41,6 +41,7 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Todo save(Todo todo) {
+        todo.setCompleted(false);
         Todo savedTodo = todoRepository.save(todo);
         LOGGER.info("Saving todo with ID: " + savedTodo.getId());
         return savedTodo;
