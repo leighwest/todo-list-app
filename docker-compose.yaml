@@ -4,9 +4,19 @@ services:
     build: ./app/server
     ports:
       - '3306:3306'
-    volumes: 
+    volumes:
       - data:/var/lib/mysql
-
+  client:
+    build: ./app/client/
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app/client:/app/
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
 # must specify named volumes (not anonymous / bind mounts)
 volumes:
   data:
