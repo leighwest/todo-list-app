@@ -16,6 +16,7 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @org.hibernate.annotations.Type(type="org.hibernate.type.UUIDCharType")
     private UUID uuid;
 
     private String description;
@@ -24,6 +25,16 @@ public class Todo {
     private LocalDate date;
 
     private boolean completed;
+
+    public Todo() {}
+
+    public Todo(UUID uuid, String description, LocalDate date, boolean completed) {
+        this.uuid = uuid;
+        this.description = description;
+        this.date = date;
+        this.completed = completed;
+    }
+
 
     public long getId() {
         return id;

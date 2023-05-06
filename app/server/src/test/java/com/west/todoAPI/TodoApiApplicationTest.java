@@ -2,8 +2,10 @@ package com.west.todoAPI;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.west.todoAPI.dto.TodoDto;
 import com.west.todoAPI.entities.Todo;
-import com.west.todoAPI.services.TodoServiceImpl;
+import com.west.todoAPI.services.TodoService;
+import com.west.todoAPI.util.EntityDtoTransformer;
 import com.west.todoAPI.validator.TodoValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,7 +32,7 @@ public class TodoApiApplicationTest {
 	MockMvc mockMvc;
 
 	@MockBean
-	private TodoServiceImpl todoService;
+	private TodoService todoService;
 
     @MockBean
     private TodoValidator tv;
@@ -42,18 +43,18 @@ public class TodoApiApplicationTest {
 		Todo todo = new Todo();
 		todo.setId(1);
 		todo.setDescription("Practice coding");
-		todo.setCompleted(false);
 
-		List<Todo> todos = Arrays.asList(todo);
+		TodoDto todoDto = EntityDtoTransformer.toDto(todo);
+
+		List<TodoDto> todos = Arrays.asList(todoDto);
 		when(todoService.getTodos()).thenReturn(todos);
-        when(tv.validate(todo)).thenReturn(Optional.empty());
 
 		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
 
-		mockMvc.perform(get("/todoapi/todos/").contextPath("/todoapi")).andExpect(status().isOk())
+		mockMvc.perform(get("/todoapi/todos/").contextPath("/todoapi")).andExpect(status().is2xxSuccessful())
 				.andExpect(content().json(objectWriter.writeValueAsString(todos)));
 	}
 

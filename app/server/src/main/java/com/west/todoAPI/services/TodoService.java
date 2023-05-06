@@ -1,18 +1,22 @@
 package com.west.todoAPI.services;
 
+import com.west.todoAPI.dto.TodoDto;
 import com.west.todoAPI.entities.Todo;
+import com.west.todoAPI.dto.request.InitialTodoRequestModel;
+import com.west.todoAPI.dto.request.UpdateTodoRequestModel;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface TodoService {
 
-    List<Todo> getTodos();
+    List<TodoDto> getTodos();
 
-    Todo findById(Long id);
+    Todo findByUuid(UUID uuid);
 
-    Todo save(Todo todo);
+    TodoDto save(InitialTodoRequestModel initialTodo);
 
-    Todo update(Long id, Todo todo);
+    TodoDto update(UUID uuid, UpdateTodoRequestModel todo);
 
-    void deleteById(Long idToDelete);
+    void deleteByUuid(UUID idToDelete);
 }

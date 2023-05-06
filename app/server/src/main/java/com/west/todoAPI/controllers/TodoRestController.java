@@ -1,6 +1,8 @@
 package com.west.todoAPI.controllers;
 
-import com.west.todoAPI.entities.Todo;
+import com.west.todoAPI.dto.TodoDto;
+import com.west.todoAPI.dto.request.InitialTodoRequestModel;
+import com.west.todoAPI.dto.request.UpdateTodoRequestModel;
 import com.west.todoAPI.services.TodoService;
 import com.west.todoAPI.validator.TodoValidator;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,9 +12,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.ResponseEntity;
@@ -31,44 +35,51 @@ public class TodoRestController {
         this.tv = tv;
     }
 
-    @GetMapping("/todos")
+    @GetMapping(path="/todos", produces = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary="Returns a list of todos")
-    public List<Todo> getTodos() throws InterruptedException {
+    public ResponseEntity<List<TodoDto>> getTodos() throws InterruptedException {
         LOGGER.info("Finding all todos");
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(1);
 
-        return todoService.getTodos();
+        List<TodoDto> todoList = todoService.getTodos();
+
+        if (todoList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(todoList);
     }
 
 
-    @PostMapping("/todos")
+    @PostMapping(path="/todos", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary="Creates an individual todo")
-    public @ApiResponse(description="Todo object") ResponseEntity<Object> createTodo(@RequestBody Todo todo) {
-        Optional<String> validationMessage = tv.validate(todo);
+    public @ApiResponse(description="Todo object") ResponseEntity<Object> createTodo(@RequestBody InitialTodoRequestModel todoDetails) {
+        Optional<String> validationMessage = tv.validate(todoDetails);
 
         if (validationMessage.isPresent()) {
             return ResponseEntity.badRequest().body(validationMessage);
         }
 
-        LOGGER.info("Creating todo: " + todo);
-        todoService.save(todo);
+        LOGGER.info("Creating todo: " + todoDetails);
+        TodoDto savedTodo = todoService.save(todoDetails);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(todo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedTodo);
     }
 
 
-    @PutMapping("/todos/{id}")
-    @Operation(summary="Updates an individual todo by ID")
-    public @ApiResponse(description="Todo object") ResponseEntity<Todo> updateTodo(@Parameter(description="ID of the todo") @RequestBody Todo todo, @PathVariable("id") Long id) {
-        Todo updatedTodo = todoService.update(id, todo);
+    @PutMapping(path="/todos/{uuid}", consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Operation(summary="Updates an individual todo by UUID")
+    public @ApiResponse(description="Todo object") ResponseEntity<TodoDto> updateTodo(@Parameter(description="ID of the todo") @PathVariable("uuid") UUID uuid, @RequestBody UpdateTodoRequestModel todo) {
+        TodoDto updatedTodo = todoService.update(uuid, todo);
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedTodo);
     }
 
-    @DeleteMapping("/todos/{id}")
+    @DeleteMapping(path="/todos/{uuid}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary="Deletes an individual todo by ID")
-    public void deleteTodo(@Parameter(description="ID of the todo") @PathVariable("id") Long id) {
-        LOGGER.info("Deleting todo with id: " + id);
-        todoService.deleteById(id);
+    public void deleteTodo(@Parameter(description="ID of the todo") @PathVariable("uuid") UUID uuid) {
+        LOGGER.info("Deleting todo with uuid: " + uuid);
+        todoService.deleteByUuid(uuid);
     }
 }
