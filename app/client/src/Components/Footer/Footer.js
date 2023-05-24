@@ -1,15 +1,12 @@
 import React, { useContext, memo } from 'react';
 
+import Button from '../UI/Button';
+import TodoContext from 'context/todo-count-context';
 
-import Button from "../UI/Button";
-import TodoContext from "../../context/todo-count-context";
-
-import classes from './Footer.module.css'
-
+import classes from './Footer.module.css';
 
 // const Footer = memo(props => {
 const Footer = (props) => {
-
   let ctx = useContext(TodoContext);
 
   let tasksToDo = '';
@@ -25,10 +22,13 @@ const Footer = (props) => {
   return (
     <div className={classes.wrapper}>
       <p className={classes.todosCount}>{tasksToDo}</p>
-      <Button class={"add-new-task-btn"} onClick={props.addDraftTodo}/>
+      <Button
+        class={'add-new-task-btn'}
+        onClick={props.addDraftTodo}
+      />
     </div>
   );
-// });
-  };
+  // });
+};
 
 export default Footer;

@@ -6,11 +6,13 @@ import TodoContext from './context/todo-count-context';
 
 import classes from './App.module.css';
 
-const App =  memo(() => {
-
+const App = memo(() => {
   const [todos, setTodos] = useState([]);
   const [draftTodo, setDraftTodo] = useState(false);
-  const todoValue = React.useMemo(() => ({todos, setTodos}), [todos, setTodos]);
+  const todoValue = React.useMemo(
+    () => ({ todos, setTodos }),
+    [todos, setTodos],
+  );
 
   const addDraftTodo = () => {
     setDraftTodo(true);
@@ -18,18 +20,21 @@ const App =  memo(() => {
 
   const deleteDraftTodo = () => {
     setDraftTodo(false);
-  }
-  
+  };
+
   return (
     <div className={classes.wrapper}>
       <Card>
         <TodoContext.Provider value={todoValue}>
-          <Todos draftTodo={draftTodo} deleteDraftTodo={deleteDraftTodo}/>
-          <Footer addDraftTodo={addDraftTodo}/>
+          <Todos
+            draftTodo={draftTodo}
+            deleteDraftTodo={deleteDraftTodo}
+          />
+          <Footer addDraftTodo={addDraftTodo} />
         </TodoContext.Provider>
       </Card>
-    </div >
+    </div>
   );
-})
+});
 
 export default App;
