@@ -4,23 +4,63 @@ This web application allows users to generate and manage todo items. The front-e
 
 ## Local Development Setup
 
-### Client (todo)
+### Docker Compose
 
-### Server
+Clone the repository and cd into the `/app` directory.
 
-Clone the repository and cd into the `/docker` directory.
+Build and run the client and database:
+
+```
+docker-compose up
+```
+
+Open
+
+### Alternatively, starting the client and/or database independently:
+
+### Client
+
+cd into the `/app/client` directory.
 
 Build the Docker image:
 
 ```
-docker build . -t <your username>/todo-list-server
+docker build . -t leighwest/todo-list-client
 ```
 
 Run the Docker image:
 
 ```
-docker run -d --name todo-mysql -v ~/Desktop/tmp:/var/lib/mysql -p 3306:3306 <your username>/todo-list-server
+docker run --name todo-client -p 3000:3000 -it leighwest/todo-list-client
 ```
+
+### Server
+
+cd into the `/app/server` directory.
+
+Build the database Docker image:
+
+```
+docker build . -t leighwest/todo-list-db
+```
+
+Run the database Docker image:
+
+```
+docker run -d --name todo-mysql -v ~/Desktop/tmp:/var/lib/mysql -p 3306:3306 leighwest/todo-list-db
+```
+
+### Start the Spring Boot server application
+
+Import the `/app/server` directory into IntelliJ
+
+Run:
+
+```
+mvn install
+```
+
+Run `TodoApiApplication`
 
 ## Using the API
 
@@ -37,12 +77,11 @@ In the body of your JSON request, submit the following data:
 {
 	"description": "My first todo",
 	"date": "20/04/2024",
-	"completed":"false"
 }
 
 ```
 
-Send the POST request to: localhost:8080/todos
+Send the POST request to: localhost:8083/todos
 
 ### Expected response
 
@@ -50,7 +89,7 @@ Send the POST request to: localhost:8080/todos
 
 ```
 {
-	"id": 1,
+	"uuid": "3dcf6712-0c47-439b-a47d-c8fa0bddaa8d",
 	"description": "My first todo",
 	"date": "20/04/2024",
 	"completed": false

@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  server:
+  database:
     build: ./app/server
     ports:
       - '3306:3306'
@@ -16,7 +16,7 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - server
+      - database
 # must specify named volumes (not anonymous / bind mounts)
 volumes:
   data:
