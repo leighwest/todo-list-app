@@ -23,5 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         // You can customize the following part based on your project, it's only a sample
         http.authorizeRequests().antMatchers("/**").permitAll().anyRequest()
                 .authenticated().and().csrf().disable().cors().configurationSource(request -> corsConfiguration);
+
+        // For H2 console
+        http.headers().frameOptions().sameOrigin();
+
     }
 }
