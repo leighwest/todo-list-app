@@ -39,7 +39,7 @@ public class TodoServiceImpl implements TodoService {
     public Todo findByUuid(UUID uuid) {
         Optional<Todo> todoOptional = todoRepository.findByUuid(uuid);
 
-        if (!todoOptional.isPresent()) {
+        if (todoOptional.isEmpty()) {
             throw new IllegalArgumentException("Todo not found!");
         }
         return todoOptional.get();
