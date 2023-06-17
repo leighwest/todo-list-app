@@ -36,13 +36,13 @@ public class TodoServiceImpl implements TodoService {
         return todoList;
     }
 
-    public Todo findByUuid(UUID uuid) {
+    public TodoDto findByUuid(UUID uuid) {
         Optional<Todo> todoOptional = todoRepository.findByUuid(uuid);
 
         if (todoOptional.isEmpty()) {
             throw new IllegalArgumentException("Todo not found!");
         }
-        return todoOptional.get();
+        return EntityDtoTransformer.toDto(todoOptional.get());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public TodoDto update(UUID uuid, UpdateTodoRequestModel todo) {
-        Todo storedTodo = findByUuid(uuid);
+        Todo storedTodo = EntityDtoTransformer.toEntity(findByUuid(uuid));
         storedTodo.setDescription(todo.getDescription());
         storedTodo.setCompleted(todo.getCompleted());
         storedTodo.setDate(todo.getDate());

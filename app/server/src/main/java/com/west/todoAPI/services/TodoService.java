@@ -1,7 +1,6 @@
 package com.west.todoAPI.services;
 
 import com.west.todoAPI.dto.TodoDto;
-import com.west.todoAPI.entities.Todo;
 import com.west.todoAPI.dto.request.InitialTodoRequestModel;
 import com.west.todoAPI.dto.request.UpdateTodoRequestModel;
 
@@ -12,7 +11,7 @@ public interface TodoService {
 
     List<TodoDto> getTodos();
 
-    Todo findByUuid(UUID uuid);
+    TodoDto findByUuid(UUID uuid);
 
     TodoDto save(InitialTodoRequestModel initialTodo);
 

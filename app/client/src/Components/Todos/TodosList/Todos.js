@@ -49,15 +49,15 @@ const Todos = (props) => {
       return { ...todo };
     });
     todosCopy.map((todo) =>
-      todo.id === todoId ? (todo.completed = !todo.completed) : todo,
+      todo.uuid === todoId ? (todo.completed = !todo.completed) : todo,
     );
     setTodos(todosCopy);
   };
 
   const todosList = todos.map((todo) => (
     <TodoItem
-      id={todo.id}
-      key={todo.id}
+      id={todo.uuid}
+      key={todo.uuid}
       description={todo.description}
       date={todo.date}
       completed={todo.completed}
