@@ -47,7 +47,7 @@ public class TodoRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(todoList);
+        return ResponseEntity.status(HttpStatus.OK).body(todoList);
     }
 
 
