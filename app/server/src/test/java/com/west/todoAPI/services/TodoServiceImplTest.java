@@ -1,6 +1,7 @@
 package com.west.todoAPI.services;
 
 import com.west.todoAPI.dto.TodoDto;
+import com.west.todoAPI.dto.request.InitialTodoRequestModel;
 import com.west.todoAPI.entities.Todo;
 import com.west.todoAPI.repositories.TodoRepository;
 import com.west.todoAPI.util.EntityDtoTransformer;
@@ -46,16 +47,16 @@ public class TodoServiceImplTest {
 
         try (MockedStatic<EntityDtoTransformer> mockedStatic = mockStatic(EntityDtoTransformer.class)) {
             TodoDto dto1 = Mockito.mock(TodoDto.class);
-            when (dto1.getUuid()).thenReturn(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"));
-            when (dto1.getDescription()).thenReturn("Todo 1");
-            when (dto1.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
-            when (dto1.isCompleted()).thenReturn(false);
+            when(dto1.getUuid()).thenReturn(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"));
+            when(dto1.getDescription()).thenReturn("Todo 1");
+            when(dto1.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
+            when(dto1.isCompleted()).thenReturn(false);
 
             TodoDto dto2 = Mockito.mock(TodoDto.class);
-            when (dto2.getUuid()).thenReturn(UUID.fromString("3dd0be0b-9ac0-4510-9d4b-491c6d9fa9ee"));
-            when (dto2.getDescription()).thenReturn("Todo 2");
-            when (dto2.getDate()).thenReturn(LocalDate.of(2026, 2, 17));
-            when (dto2.isCompleted()).thenReturn(false);
+            when(dto2.getUuid()).thenReturn(UUID.fromString("3dd0be0b-9ac0-4510-9d4b-491c6d9fa9ee"));
+            when(dto2.getDescription()).thenReturn("Todo 2");
+            when(dto2.getDate()).thenReturn(LocalDate.of(2026, 2, 17));
+            when(dto2.isCompleted()).thenReturn(false);
 
             when(todoRepository.findAll()).thenReturn(List.of(todo1, todo2));
 
@@ -77,6 +78,7 @@ public class TodoServiceImplTest {
             verify(todoRepository).findAll();
         }
     }
+
     @Test
     void findByUuid_ShouldThrowException_IfTodoNotFound() {
 
@@ -87,6 +89,7 @@ public class TodoServiceImplTest {
         // Assert
         assertThrows(IllegalArgumentException.class, () -> todoService.findByUuid(uuid));
 
+        // Verify
         verify(todoRepository).findByUuid(uuid);
         verifyNoMoreInteractions(todoRepository);
     }
@@ -99,10 +102,10 @@ public class TodoServiceImplTest {
 
         try (MockedStatic<EntityDtoTransformer> mockedStatic = mockStatic(EntityDtoTransformer.class)) {
             TodoDto dto1 = Mockito.mock(TodoDto.class);
-            when (dto1.getUuid()).thenReturn(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"));
-            when (dto1.getDescription()).thenReturn("Todo 1");
-            when (dto1.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
-            when (dto1.isCompleted()).thenReturn(false);
+            when(dto1.getUuid()).thenReturn(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"));
+            when(dto1.getDescription()).thenReturn("Todo 1");
+            when(dto1.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
+            when(dto1.isCompleted()).thenReturn(false);
 
             mockedStatic.when(() -> EntityDtoTransformer.toDto(any(Todo.class)))
                     .thenReturn(dto1);
@@ -115,10 +118,46 @@ public class TodoServiceImplTest {
             assertEquals(todoDto1.getDescription(), actual.getDescription());
             assertEquals(todoDto1.getDate(), actual.getDate());
             assertEquals(todoDto1.isCompleted(), actual.isCompleted());
-            }
-
         }
+
+        // Verify
+        verify(todoRepository).findByUuid(any());
     }
+
+    @Test
+    void save_ShouldReturnTodoDto() {
+
+        // Arrange
+        InitialTodoRequestModel initialTodo = Mockito.mock(InitialTodoRequestModel.class);
+        when(initialTodo.getDescription()).thenReturn("Todo 1");
+        when(initialTodo.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
+
+        when(todoRepository.save(any())).thenReturn(todo1);
+
+        try (MockedStatic<EntityDtoTransformer> mockedStatic = mockStatic(EntityDtoTransformer.class)) {
+            TodoDto dto1 = Mockito.mock(TodoDto.class);
+            when(dto1.getUuid()).thenReturn(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"));
+            when(dto1.getDescription()).thenReturn("Todo 1");
+            when(dto1.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
+            when(dto1.isCompleted()).thenReturn(false);
+
+            mockedStatic.when(() -> EntityDtoTransformer.toDto(any(Todo.class)))
+                    .thenReturn(dto1);
+
+            // Act
+            TodoDto actual = todoService.save(initialTodo);
+
+            // Assert
+            assertEquals(todoDto1.getUuid(), actual.getUuid());
+            assertEquals(todoDto1.getDescription(), actual.getDescription());
+            assertEquals(todoDto1.getDate(), actual.getDate());
+            assertEquals(todoDto1.isCompleted(), actual.isCompleted());
+        }
+
+        // Verify
+        verify(todoRepository).save(any());
+    }
+}
 
 
 
