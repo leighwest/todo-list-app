@@ -96,3 +96,7 @@ Send the POST request to: localhost:8083/todos
 }
 
 ```
+
+## Using the API with Swagger
+
+The API is viewable locally using swagger at `http://localhost:8083/swagger-ui/index.html`
