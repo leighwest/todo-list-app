@@ -1,0 +1,12 @@
+[{
+  "uuid": "58069600-4377-463e-8ae6-6de175cea5ed",
+  "description": "My first todo",
+  "date": "20/04/2024",
+  "completed": "false"
+},
+{
+"uuid": "3dd0be0b-9ac0-4510-9d4b-491c6d9fa9ee",
+"description": "My second todo",
+"date": "27/06/2024",
+"completed": "false"
+}]

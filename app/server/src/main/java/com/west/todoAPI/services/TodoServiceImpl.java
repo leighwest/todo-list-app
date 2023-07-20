@@ -5,7 +5,6 @@ import com.west.todoAPI.entities.Todo;
 import com.west.todoAPI.dto.request.InitialTodoRequestModel;
 import com.west.todoAPI.dto.request.UpdateTodoRequestModel;
 import com.west.todoAPI.repositories.TodoRepository;
-import com.west.todoAPI.util.EntityDtoTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,27 +21,28 @@ public class TodoServiceImpl implements TodoService {
 
     private final TodoRepository todoRepository;
 
+    private final Transformer transformer;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoServiceImpl.class);
 
-    public TodoServiceImpl(TodoRepository todoRepository) {
+    public TodoServiceImpl(TodoRepository todoRepository, Transformer transformer) {
         this.todoRepository = todoRepository;
+        this.transformer = transformer;
     }
 
     @Override
     public List<TodoDto> getTodos() {
 
         List<TodoDto> todoList = new ArrayList<>();
-        todoRepository.findAll().stream().map(EntityDtoTransformer::toDto).iterator().forEachRemaining(todoList::add);
+        todoRepository.findAll().stream().map(transformer::transformToDto).iterator().forEachRemaining(todoList::add);
         return todoList;
     }
 
-    public TodoDto findByUuid(UUID uuid) {
+    public Optional<TodoDto> findByUuid(UUID uuid) {
         Optional<Todo> todoOptional = todoRepository.findByUuid(uuid);
 
-        if (todoOptional.isEmpty()) {
-            throw new IllegalArgumentException("Todo not found!");
-        }
-        return EntityDtoTransformer.toDto(todoOptional.get());
+        return todoOptional.map(transformer::transformToDto);
+
     }
 
     @Override
@@ -51,20 +51,23 @@ public class TodoServiceImpl implements TodoService {
 
         Todo savedTodo = todoRepository.save(todo);
         LOGGER.info("Saving todo with ID: " + savedTodo.getId());
-        return EntityDtoTransformer.toDto(todo);
+        return transformer.transformToDto(todo);
     }
 
     @Override
     public TodoDto update(UUID uuid, UpdateTodoRequestModel todo) {
-        Todo storedTodo = EntityDtoTransformer.toEntity(findByUuid(uuid));
+
+        Todo storedTodo = todoRepository.findByUuid(uuid)
+                .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
+
         storedTodo.setDescription(todo.getDescription());
         storedTodo.setCompleted(todo.getCompleted());
         storedTodo.setDate(todo.getDate());
 
-        todoRepository.save(storedTodo);
-        LOGGER.info("Updating todo with ID: " + storedTodo.getId());
+        Todo updatedTodo = todoRepository.save(storedTodo);
+        LOGGER.info("Updating todo with ID: " + updatedTodo.getId());
 
-        return EntityDtoTransformer.toDto(storedTodo);
+        return transformer.transformToDto(updatedTodo);
     }
 
     public void deleteByUuid(UUID idToDelete) {

@@ -1,93 +1,90 @@
 package com.west.todoAPI.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.west.todoAPI.dto.TodoDto;
 import com.west.todoAPI.dto.request.InitialTodoRequestModel;
+import com.west.todoAPI.dto.request.UpdateTodoRequestModel;
 import com.west.todoAPI.entities.Todo;
 import com.west.todoAPI.repositories.TodoRepository;
-import com.west.todoAPI.util.EntityDtoTransformer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TodoServiceImplTest {
-
     @Mock
     private TodoRepository todoRepository;
 
-    @InjectMocks
-    private TodoServiceImpl todoService;
+//    @Mock
+//    private Transformer transformer;
 
-    Todo todo1 = new Todo(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"), "Todo 1", LocalDate.of(2024, 12, 26), false);
-    Todo todo2 = new Todo(UUID.fromString("3dd0be0b-9ac0-4510-9d4b-491c6d9fa9ee"), "Todo 2", LocalDate.of(2026, 2, 17), false);
-    TodoDto todoDto1 = EntityDtoTransformer.toDto(todo1);
-    TodoDto todoDto2 = EntityDtoTransformer.toDto(todo2);
+//    @InjectMocks
+//    private TodoServiceImpl todoService;
 
-    @Test
-    void getTodos_ShouldReturnListOfTodoDtos() {
+    static ObjectMapper objectMapper;
 
-        // Arrange
-        List<TodoDto> expectedTodoList = new ArrayList<>();
-        expectedTodoList.add(todoDto1);
-        expectedTodoList.add(todoDto2);
-
-        try (MockedStatic<EntityDtoTransformer> mockedStatic = mockStatic(EntityDtoTransformer.class)) {
-            TodoDto dto1 = Mockito.mock(TodoDto.class);
-            when(dto1.getUuid()).thenReturn(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"));
-            when(dto1.getDescription()).thenReturn("Todo 1");
-            when(dto1.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
-            when(dto1.isCompleted()).thenReturn(false);
-
-            TodoDto dto2 = Mockito.mock(TodoDto.class);
-            when(dto2.getUuid()).thenReturn(UUID.fromString("3dd0be0b-9ac0-4510-9d4b-491c6d9fa9ee"));
-            when(dto2.getDescription()).thenReturn("Todo 2");
-            when(dto2.getDate()).thenReturn(LocalDate.of(2026, 2, 17));
-            when(dto2.isCompleted()).thenReturn(false);
-
-            when(todoRepository.findAll()).thenReturn(List.of(todo1, todo2));
-
-            mockedStatic.when(() -> EntityDtoTransformer.toDto(any(Todo.class)))
-                    .thenReturn(dto1, dto2);
-
-            // Act
-            List<TodoDto> actual = todoService.getTodos();
-
-            // Assert
-            for (int i = 0; i < expectedTodoList.size(); i++) {
-                assertEquals(expectedTodoList.get(i).getUuid(), actual.get(i).getUuid());
-                assertEquals(expectedTodoList.get(i).getDescription(), actual.get(i).getDescription());
-                assertEquals(expectedTodoList.get(i).getDate(), actual.get(i).getDate());
-                assertEquals(expectedTodoList.get(i).isCompleted(), actual.get(i).isCompleted());
-            }
-
-//            assertIterableEquals(expectedTodoList, actual);
-            verify(todoRepository).findAll();
-        }
+    @BeforeAll
+    static void setup() {
+        objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
     }
 
     @Test
-    void findByUuid_ShouldThrowException_IfTodoNotFound() {
+    void getTodos_ShouldReturnListOfTodoDtos() throws IOException{
+
+        // Arrange
+        List<TodoDto> expectedTodoDtoList = getTodoDtos();
+        List<Todo> mockedTodos = getTodos();
+        Transformer transformerSpy = Mockito.spy(new Transformer());
+
+        when(todoRepository.findAll()).thenReturn(mockedTodos);
+        Mockito.doCallRealMethod().when(transformerSpy).transformToDto(Mockito.any(Todo.class));
+
+        TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
+
+        // FIXME: this is bad...it assumes the todoTestData and todoDtoTestData JSON data will always be in order. Adding an object to either file would break this
+        // This is why I'm using a spy
+//        for (int i = 0; i < mockedTodos.size(); i++) {
+//            when(transformer.transformToDto(mockedTodos.get(i))).thenReturn(expectedTodoDtoList.get(i));
+//        }
+
+        // Act
+        todoService.getTodos();
+
+        verify(todoRepository).findAll();
+        verify(transformerSpy, times(expectedTodoDtoList.size())).transformToDto(any());
+    }
+
+    @Test
+    void findByUuid_ShouldReturnOptionalEmpty_IfTodoNotFound() {
 
         // Arrange
         UUID uuid = UUID.randomUUID();
         when(todoRepository.findByUuid(uuid)).thenReturn(Optional.empty());
+        Transformer transformerSpy = Mockito.spy(new Transformer());
+
+        TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
+
+        // Act
+        Optional<TodoDto> todo = todoService.findByUuid(uuid);
 
         // Assert
-        assertThrows(IllegalArgumentException.class, () -> todoService.findByUuid(uuid));
+        assertEquals(Optional.empty(), todo);
 
         // Verify
         verify(todoRepository).findByUuid(uuid);
@@ -95,68 +92,109 @@ public class TodoServiceImplTest {
     }
 
     @Test
-    void findByUuid_ShouldReturnTodoDto_IfTodoFound() {
+    void findByUuid_ShouldReturnTodoDto_IfTodoFound() throws IOException {
 
         // Arrange
-        when(todoRepository.findByUuid(any())).thenReturn(Optional.of(todo1));
+        List<Todo> mockedTodos = getTodos();
+        Todo expectedTodo = mockedTodos.get(0);
+        TodoDto expectedTodoDto = getTodoDtos().get(0);
 
-        try (MockedStatic<EntityDtoTransformer> mockedStatic = mockStatic(EntityDtoTransformer.class)) {
-            TodoDto dto1 = Mockito.mock(TodoDto.class);
-            when(dto1.getUuid()).thenReturn(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"));
-            when(dto1.getDescription()).thenReturn("Todo 1");
-            when(dto1.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
-            when(dto1.isCompleted()).thenReturn(false);
+        when(todoRepository.findByUuid(any())).thenReturn(Optional.of(expectedTodo));
 
-            mockedStatic.when(() -> EntityDtoTransformer.toDto(any(Todo.class)))
-                    .thenReturn(dto1);
+        Transformer transformerSpy = Mockito.spy(new Transformer());
 
-            // Act
-            TodoDto actual = todoService.findByUuid(UUID.randomUUID());
+        TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
 
-            // Assert
-            assertEquals(todoDto1.getUuid(), actual.getUuid());
-            assertEquals(todoDto1.getDescription(), actual.getDescription());
-            assertEquals(todoDto1.getDate(), actual.getDate());
-            assertEquals(todoDto1.isCompleted(), actual.isCompleted());
-        }
+        // Act
+        Optional<TodoDto> actualOptional = todoService.findByUuid(UUID.randomUUID());
+
+        // Assert
+        assertTrue(actualOptional.isPresent());
+        TodoDto actual = actualOptional.get();
+        assertEquals(expectedTodoDto.getUuid(), actual.getUuid());
+        assertEquals(expectedTodoDto.getDescription(), actual.getDescription());
+        assertEquals(expectedTodoDto.getDate(), actual.getDate());
+        assertEquals(expectedTodoDto.isCompleted(), actual.isCompleted());
 
         // Verify
         verify(todoRepository).findByUuid(any());
     }
 
     @Test
-    void save_ShouldReturnTodoDto() {
+    void save_ShouldReturnTodoDto() throws IOException {
 
         // Arrange
-        InitialTodoRequestModel initialTodo = Mockito.mock(InitialTodoRequestModel.class);
-        when(initialTodo.getDescription()).thenReturn("Todo 1");
-        when(initialTodo.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
+        InitialTodoRequestModel initialTodo = getInitialTodoRequestModel();
+        Todo savedTodo = getTodos().get(0);
+        TodoDto todoDto = getTodoDtos().get(0);
+        when(todoRepository.save(any())).thenReturn(savedTodo);
 
-        when(todoRepository.save(any())).thenReturn(todo1);
+        Transformer transformerSpy = Mockito.spy(new Transformer());
 
-        try (MockedStatic<EntityDtoTransformer> mockedStatic = mockStatic(EntityDtoTransformer.class)) {
-            TodoDto dto1 = Mockito.mock(TodoDto.class);
-            when(dto1.getUuid()).thenReturn(UUID.fromString("58069600-4377-463e-8ae6-6de175cea5ed"));
-            when(dto1.getDescription()).thenReturn("Todo 1");
-            when(dto1.getDate()).thenReturn(LocalDate.of(2024, 12, 26));
-            when(dto1.isCompleted()).thenReturn(false);
+        TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
 
-            mockedStatic.when(() -> EntityDtoTransformer.toDto(any(Todo.class)))
-                    .thenReturn(dto1);
+        // Act
+        TodoDto actual = todoService.save(initialTodo);
 
-            // Act
-            TodoDto actual = todoService.save(initialTodo);
-
-            // Assert
-            assertEquals(todoDto1.getUuid(), actual.getUuid());
-            assertEquals(todoDto1.getDescription(), actual.getDescription());
-            assertEquals(todoDto1.getDate(), actual.getDate());
-            assertEquals(todoDto1.isCompleted(), actual.isCompleted());
-        }
+        // Assert
+        assertEquals(todoDto.getDescription(), actual.getDescription());
+        assertEquals(todoDto.getDate(), actual.getDate());
+        assertEquals(todoDto.isCompleted(), actual.isCompleted());
 
         // Verify
         verify(todoRepository).save(any());
     }
+
+    @Test
+    void update_ShouldReturnTodoDto() throws IOException {
+
+        Todo todo = getTodos().get(1);
+        TodoDto todoDto = getTodoDtos().get(1);
+        UpdateTodoRequestModel updatedTodo = getUpdateTodoRequestModel();
+
+        when(todoRepository.findByUuid(any())).thenReturn(Optional.of(todo));
+
+        when(todoRepository.save(any())).thenReturn(todo);
+
+        Transformer transformerSpy = Mockito.spy(new Transformer());
+
+        TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
+
+        // Act
+        TodoDto actual = todoService.update(UUID.fromString("3dd0be0b-9ac0-4510-9d4b-491c6d9fa9ee"), updatedTodo);
+
+        // Assert
+        assertEquals(todoDto.getUuid(), actual.getUuid());
+        assertEquals("My second todo is updated", actual.getDescription());
+        assertEquals(todoDto.getDate(), actual.getDate());
+        assertEquals(todoDto.isCompleted(), actual.isCompleted());
+
+        // Verify
+        verify(todoRepository).save(any());
+    }
+
+    List<TodoDto> getTodoDtos() throws IOException{
+        TypeReference<List<TodoDto>> todoDtoTypeReference = new TypeReference<>() {};
+        return objectMapper.readValue(new File("src/test/resources/todoDtoTestData.json"), todoDtoTypeReference);
+    }
+
+    List<Todo> getTodos() throws IOException {
+
+        TypeReference<List<Todo>> todoTypeReference = new TypeReference<>() {};
+        return objectMapper.readValue(new File("src/test/resources/todoTestData.json"), todoTypeReference);
+    }
+
+    UpdateTodoRequestModel getUpdateTodoRequestModel() throws IOException {
+        TypeReference<UpdateTodoRequestModel> updateTodoRequestModelTypeReference = new TypeReference<>() {};
+        return objectMapper.readValue(new File("src/test/resources/updateTodoRequestModelTestData.json"), updateTodoRequestModelTypeReference);
+    }
+
+    InitialTodoRequestModel getInitialTodoRequestModel() throws IOException {
+        TypeReference<InitialTodoRequestModel> initialTodoRequestModelTypeReference = new TypeReference<>() {};
+        return objectMapper.readValue(new File("src/test/resources/initialTodoRequestModelTestData.json"), initialTodoRequestModelTypeReference);
+    }
+
+
 }
 
 

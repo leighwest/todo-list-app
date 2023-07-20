@@ -5,13 +5,14 @@ import com.west.todoAPI.dto.request.InitialTodoRequestModel;
 import com.west.todoAPI.dto.request.UpdateTodoRequestModel;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TodoService {
 
     List<TodoDto> getTodos();
 
-    TodoDto findByUuid(UUID uuid);
+    Optional<TodoDto> findByUuid(UUID uuid);
 
     TodoDto save(InitialTodoRequestModel initialTodo);
 

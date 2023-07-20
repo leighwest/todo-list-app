@@ -85,7 +85,10 @@ public class TodoRestController {
                     { @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "404", description = "Resource not found")})
-    public @ApiResponse(description="Todo object") ResponseEntity<TodoDto> updateTodo(@Parameter(description="ID of the todo") @PathVariable("uuid") UUID uuid, @RequestBody UpdateTodoRequestModel todo) {
+    public @ApiResponse(description="Todo object") ResponseEntity<TodoDto> updateTodo
+            (@Parameter(description="ID of the todo")
+             @PathVariable("uuid") UUID uuid,
+             @RequestBody UpdateTodoRequestModel todo) {
         TodoDto updatedTodo = todoService.update(uuid, todo);
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedTodo);
