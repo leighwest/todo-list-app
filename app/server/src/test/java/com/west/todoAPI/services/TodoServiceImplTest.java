@@ -50,7 +50,7 @@ public class TodoServiceImplTest {
         // Arrange
         List<TodoDto> expectedTodoDtoList = getTodoDtos();
         List<Todo> mockedTodos = getTodos();
-        Transformer transformerSpy = Mockito.spy(new Transformer());
+        Transformer transformerSpy = Mockito.spy(Transformer.class);
 
         when(todoRepository.findAll()).thenReturn(mockedTodos);
         Mockito.doCallRealMethod().when(transformerSpy).transformToDto(Mockito.any(Todo.class));
@@ -76,7 +76,7 @@ public class TodoServiceImplTest {
         // Arrange
         UUID uuid = UUID.randomUUID();
         when(todoRepository.findByUuid(uuid)).thenReturn(Optional.empty());
-        Transformer transformerSpy = Mockito.spy(new Transformer());
+        Transformer transformerSpy = Mockito.spy(Transformer.class);
 
         TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
 
@@ -101,7 +101,7 @@ public class TodoServiceImplTest {
 
         when(todoRepository.findByUuid(any())).thenReturn(Optional.of(expectedTodo));
 
-        Transformer transformerSpy = Mockito.spy(new Transformer());
+        Transformer transformerSpy = Mockito.spy(Transformer.class);
 
         TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
 
@@ -129,7 +129,7 @@ public class TodoServiceImplTest {
         TodoDto todoDto = getTodoDtos().get(0);
         when(todoRepository.save(any())).thenReturn(savedTodo);
 
-        Transformer transformerSpy = Mockito.spy(new Transformer());
+        Transformer transformerSpy = Mockito.spy(Transformer.class);
 
         TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
 
@@ -156,7 +156,7 @@ public class TodoServiceImplTest {
 
         when(todoRepository.save(any())).thenReturn(todo);
 
-        Transformer transformerSpy = Mockito.spy(new Transformer());
+        Transformer transformerSpy = Mockito.spy(Transformer.class);
 
         TodoServiceImpl todoService = new TodoServiceImpl(todoRepository, transformerSpy);
 
@@ -193,8 +193,6 @@ public class TodoServiceImplTest {
         TypeReference<InitialTodoRequestModel> initialTodoRequestModelTypeReference = new TypeReference<>() {};
         return objectMapper.readValue(new File("src/test/resources/initialTodoRequestModelTestData.json"), initialTodoRequestModelTypeReference);
     }
-
-
 }
 
 
